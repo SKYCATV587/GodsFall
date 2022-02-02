@@ -167,8 +167,11 @@ try {
     version = minecraftVersion + "-" + identifiedVersion
 }
 catch (Exception e) {
-    logger.error("\u001B[1;31mThis mod must be version controlled by Git AND the repository must provide at least one tag,\nor the VERSION override must be set!\u001B[0m");
-    version = minecraftVersion + '-' + 'NO-GIT-TAG-SET'
+    logger.error("\n\u001B[1;31mThis mod must be version controlled by Git AND the repository must provide at least one tag,\n" +
+                 "or the VERSION override must be set! \u001B[32m(Don't download from GitHub using the ZIP option, instead\n" +
+                 "clone the repository, see\u001B[33m https://gtnh.miraheze.org/wiki/Development \u001B[32mfor details.)\u001B[0m\n");
+    identifiedVersion = 'NO-GIT-TAG-SET'
+    version = minecraftVersion + '-' + identifiedVersion
 }
 
 group = modGroup
@@ -209,8 +212,8 @@ minecraft {
                 replace gradleTokenVersion, versionDetails().lastTag
             }
             catch (Exception e) {
-                logger.error('\7\u001B[31mGoing to blindly try to continue, this probably won\'t work!!');
-                replace gradleTokenVersion, version
+                logger.error('\7\u001B[31mGoing to blindly try to use\u001B[1;34m ' + minecraftVersion + "-" + identifiedVersion + '\u001B[0m\u001B[31m, this probably won\'t work the way you expect!!\n');
+                replace gradleTokenVersion, minecraftVersion + "-" + identifiedVersion
             }
         }
         if(gradleTokenGroupName) {
@@ -404,7 +407,7 @@ processResources
                 "modName": modName
         }
         catch (Exception e) {
-            logger.error('\u001B[7mSeriously go setup git');
+            logger.error('\u001B[7mWe hope you know what you\'re doing using\u001B[0m\u001B[1;34m ' + version + '\u001B[0m\n');
             expand "minecraftVersion": project.minecraft.version,
                 "modVersion": version,
                 "modId": modId,
