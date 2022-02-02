@@ -209,8 +209,8 @@ minecraft {
                 replace gradleTokenVersion, versionDetails().lastTag
             }
             catch (Exception e) {
-                logger.error('\7\u001B[31mGoing to blindly try to continue, this most certainly won\'t work!!');
-                replace gradleTokenVersion, 'NO-GIT-TAG-SET'
+                logger.error('\7\u001B[31mGoing to blindly try to continue, this probably won\'t work!!');
+                replace gradleTokenVersion, version
             }
         }
         if(gradleTokenGroupName) {
@@ -406,7 +406,7 @@ processResources
         catch (Exception e) {
             logger.error('\u001B[7mSeriously go setup git');
             expand "minecraftVersion": project.minecraft.version,
-                "modVersion": 'NO-GIT-TAG-SET',
+                "modVersion": version,
                 "modId": modId,
                 "modName": modName
         }
