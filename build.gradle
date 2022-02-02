@@ -1,4 +1,4 @@
-//version: 1643020202
+//version: 1643844119
 /*
 DO NOT CHANGE THIS FILE!
 
@@ -40,11 +40,15 @@ plugins {
     id 'idea'
     id 'eclipse'
     id 'scala'
-    id("org.ajoberstar.grgit") version("3.1.1")
-    id("com.github.johnrengelman.shadow") version("4.0.4")
-    id("com.palantir.git-version") version("0.12.3")
-    id('de.undercouch.download') version('4.1.2')
-    id("maven-publish")
+    id('org.ajoberstar.grgit') version('4.1.1')
+    id('com.github.johnrengelman.shadow') version('4.0.4')
+    id('com.palantir.git-version') version('0.13.0') apply false
+    id('de.undercouch.download') version('5.0.1')
+    id('maven-publish')
+}
+
+if (project.file('.git/HEAD').isFile()) {
+    apply plugin: 'com.palantir.git-version'
 }
 
 apply plugin: 'forge'
@@ -163,7 +167,8 @@ try {
     version = minecraftVersion + "-" + identifiedVersion
 }
 catch (Exception e) {
-    throw new IllegalStateException("This mod must be version controlled by Git AND the repository must provide at least one tag, or the VERSION override must be set!");
+    logger.error("\u001B[1;31mThis mod must be version controlled by Git AND the repository must provide at least one tag,\nor the VERSION override must be set!\u001B[0m");
+    version = minecraftVersion + '-' + 'NO-GIT-TAG-SET'
 }
 
 group = modGroup
@@ -200,7 +205,13 @@ minecraft {
             replace gradleTokenModName, modName
         }
         if(gradleTokenVersion) {
-            replace gradleTokenVersion, versionDetails().lastTag
+            try {
+                replace gradleTokenVersion, versionDetails().lastTag
+            }
+            catch (Exception e) {
+                logger.error('\7\u001B[31mGoing to blindly try to continue, this most certainly won\'t work!!');
+                replace gradleTokenVersion, 'NO-GIT-TAG-SET'
+            }
         }
         if(gradleTokenGroupName) {
             replace gradleTokenGroupName, modGroup
@@ -380,16 +391,25 @@ processResources
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
-
+    
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
 
         // replace version and mcversion
-        expand "minecraftVersion": project.minecraft.version,
+        try {
+            expand "minecraftVersion": project.minecraft.version,
                 "modVersion": versionDetails().lastTag,
                 "modId": modId,
                 "modName": modName
+        }
+        catch (Exception e) {
+            logger.error('\u001B[7mSeriously go setup git');
+            expand "minecraftVersion": project.minecraft.version,
+                "modVersion": 'NO-GIT-TAG-SET',
+                "modId": modId,
+                "modName": modName
+        }
     }
 
     if(usesMixins.toBoolean()) {
