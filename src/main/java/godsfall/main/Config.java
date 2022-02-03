@@ -1,5 +1,6 @@
 package godsfall.main;
 
+import godsfall.main.Tags;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 

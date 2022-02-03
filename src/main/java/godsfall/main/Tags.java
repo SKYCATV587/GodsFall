@@ -2,6 +2,8 @@ package godsfall.main;
 
 // Use this class for Strings only. Do not import any classes here. It will lead to issues with Mixins if in use!
 
+import net.minecraft.creativetab.CreativeTabs;
+
 public class Tags {
 
     // GRADLETOKEN_* will be replaced by your configuration values at build time
@@ -9,4 +11,6 @@ public class Tags {
     public static final String MODNAME = "GRADLETOKEN_MODNAME";
     public static final String VERSION = "GRADLETOKEN_VERSION";
     public static final String GROUPNAME = "GRADLETOKEN_GROUPNAME";
+
+    public static final CreativeTabs GF = new Tabs("Gods Fall");
 }

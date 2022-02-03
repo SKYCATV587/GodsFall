@@ -1,36 +1,41 @@
 package godsfall.main;
 
+import godsfall.loader.ItemRegistry;
+import godsfall.client.ClientProxy;
+import godsfall.common.CommonProxy;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.*;
-import cpw.mods.fml.common.Mod;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = GodsFall.MODID, version = Tags.VERSION, name = Tags.MODNAME, acceptedMinecraftVersions = "[1.7.10]")
+@Mod(modid = Tags.MODID, version = Tags.VERSION, name = Tags.MODNAME, acceptedMinecraftVersions = "[1.7.10]")
 public final class GodsFall {
 
     private static Logger LOG = LogManager.getLogger(Tags.MODID);
 
-    @SidedProxy(clientSide = Tags.GROUPNAME + ".ClientProxy", serverSide = Tags.GROUPNAME + ".CommonProxy")
+    @SidedProxy(clientSide = Tags.GROUPNAME + ".client.ClientProxy", serverSide = Tags.GROUPNAME + ".common.CommonProxy")
     public static CommonProxy proxy;
 
     @Mod.EventHandler
     // preInit "Run before anything else. Read your config, create blocks, items,
     // etc, and register them with the GameRegistry."
     public void preInit(FMLPreInitializationEvent event) {
+        ItemRegistry.preInitLoad();
         proxy.preInit(event);
     }
 
     @Mod.EventHandler
     // load "Do your mod setup. Build whatever data structures you care about. Register recipes."
     public void init(FMLInitializationEvent event) {
+        ItemRegistry.initLoad();
         proxy.init(event);
     }
 
     @Mod.EventHandler
     // postInit "Handle interaction with other mods, complete your setup based on this."
     public void postInit(FMLPostInitializationEvent event) {
+        ItemRegistry.postInitLoad();
         proxy.postInit(event);
     }
 

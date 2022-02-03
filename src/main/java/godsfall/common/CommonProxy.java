@@ -1,6 +1,9 @@
-package godsfall.main;
+package godsfall.common;
 
+import godsfall.main.Config;
+import godsfall.main.Tags;
 import cpw.mods.fml.common.event.*;
+import godsfall.main.GodsFall;
 
 public class CommonProxy {
 
