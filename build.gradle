@@ -65,7 +65,7 @@ idea {
     }
 }
 
-if(JavaVersion.current() != JavaVersion.VERSION_1_8) {
+if (JavaVersion.current() != JavaVersion.VERSION_1_8) {
     throw new GradleException("This project requires Java 8, but it's running on " + JavaVersion.current())
 }
 
@@ -97,49 +97,49 @@ String scalaSourceDir = "src/main/scala/"
 
 String targetPackageJava = javaSourceDir + modGroup.toString().replaceAll("\\.", "/")
 String targetPackageScala = scalaSourceDir + modGroup.toString().replaceAll("\\.", "/")
-if((getFile(targetPackageJava).exists() || getFile(targetPackageScala).exists()) == false) {
+if ((getFile(targetPackageJava).exists() || getFile(targetPackageScala).exists()) == false) {
     throw new GradleException("Could not resolve \"modGroup\"! Could not find " + targetPackageJava + " or " + targetPackageScala)
 }
 
-if(apiPackage) {
+if (apiPackage) {
     targetPackageJava = javaSourceDir + modGroup.toString().replaceAll("\\.", "/") + "/" + apiPackage.toString().replaceAll("\\.", "/")
     targetPackageScala = scalaSourceDir + modGroup.toString().replaceAll("\\.", "/") + "/" + apiPackage.toString().replaceAll("\\.", "/")
-    if((getFile(targetPackageJava).exists() || getFile(targetPackageScala).exists()) == false) {
+    if ((getFile(targetPackageJava).exists() || getFile(targetPackageScala).exists()) == false) {
         throw new GradleException("Could not resolve \"apiPackage\"! Could not find " + targetPackageJava + " or " + targetPackageScala)
     }
 }
 
-if(accessTransformersFile) {
+if (accessTransformersFile) {
     String targetFile = "src/main/resources/META-INF/" + accessTransformersFile
-    if(getFile(targetFile).exists() == false) {
+    if (getFile(targetFile).exists() == false) {
         throw new GradleException("Could not resolve \"accessTransformersFile\"! Could not find " + targetFile)
     }
 }
 
-if(usesMixins.toBoolean()) {
-    if(mixinsPackage.isEmpty() || mixinPlugin.isEmpty()) {
+if (usesMixins.toBoolean()) {
+    if (mixinsPackage.isEmpty() || mixinPlugin.isEmpty()) {
         throw new GradleException("\"mixinPlugin\" requires \"mixinsPackage\" and \"mixinPlugin\" to be set!")
     }
 
     targetPackageJava = javaSourceDir + modGroup.toString().replaceAll("\\.", "/") + "/" + mixinsPackage.toString().replaceAll("\\.", "/")
     targetPackageScala = scalaSourceDir + modGroup.toString().replaceAll("\\.", "/") + "/" + mixinsPackage.toString().replaceAll("\\.", "/")
-    if((getFile(targetPackageJava).exists() || getFile(targetPackageScala).exists()) == false) {
+    if ((getFile(targetPackageJava).exists() || getFile(targetPackageScala).exists()) == false) {
         throw new GradleException("Could not resolve \"mixinsPackage\"! Could not find " + targetPackageJava + " or " + targetPackageScala)
     }
 
     String targetFileJava = javaSourceDir + modGroup.toString().replaceAll("\\.", "/") + "/" + mixinPlugin.toString().replaceAll("\\.", "/") + ".java"
     String targetFileScala = scalaSourceDir + modGroup.toString().replaceAll("\\.", "/") + "/" + mixinPlugin.toString().replaceAll("\\.", "/") + ".scala"
     String targetFileScalaJava = scalaSourceDir + modGroup.toString().replaceAll("\\.", "/") + "/" + mixinPlugin.toString().replaceAll("\\.", "/") + ".java"
-    if((getFile(targetFileJava).exists() || getFile(targetFileScala).exists() || getFile(targetFileScalaJava).exists()) == false) {
+    if ((getFile(targetFileJava).exists() || getFile(targetFileScala).exists() || getFile(targetFileScalaJava).exists()) == false) {
         throw new GradleException("Could not resolve \"mixinPlugin\"! Could not find " + targetFileJava + " or " + targetFileScala + " or " + targetFileScalaJava)
     }
 }
 
-if(coreModClass) {
+if (coreModClass) {
     String targetFileJava = javaSourceDir + modGroup.toString().replaceAll("\\.", "/") + "/" + coreModClass.toString().replaceAll("\\.", "/") + ".java"
     String targetFileScala = scalaSourceDir + modGroup.toString().replaceAll("\\.", "/") + "/" + coreModClass.toString().replaceAll("\\.", "/") + ".scala"
     String targetFileScalaJava = scalaSourceDir + modGroup.toString().replaceAll("\\.", "/") + "/" + coreModClass.toString().replaceAll("\\.", "/") + ".java"
-    if((getFile(targetFileJava).exists() || getFile(targetFileScala).exists() || getFile(targetFileScalaJava).exists()) == false) {
+    if ((getFile(targetFileJava).exists() || getFile(targetFileScala).exists() || getFile(targetFileScalaJava).exists()) == false) {
         throw new GradleException("Could not resolve \"coreModClass\"! Could not find " + targetFileJava + " or " + targetFileScala + " or " + targetFileScalaJava)
     }
 }
@@ -167,10 +167,9 @@ catch (Exception e) {
 }
 
 group = modGroup
-if(project.hasProperty("customArchiveBaseName") && customArchiveBaseName) {
+if (project.hasProperty("customArchiveBaseName") && customArchiveBaseName) {
     archivesBaseName = customArchiveBaseName
-}
-else {
+} else {
     archivesBaseName = modId
 }
 
@@ -178,7 +177,7 @@ else {
 def arguments = []
 def jvmArguments = []
 
-if(usesMixins.toBoolean()) {
+if (usesMixins.toBoolean()) {
     arguments += [
             "--tweakClass org.spongepowered.asm.launch.MixinTweaker"
     ]
@@ -193,16 +192,16 @@ minecraft {
 
     if (replaceGradleTokenInFile) {
         replaceIn replaceGradleTokenInFile
-        if(gradleTokenModId) {
+        if (gradleTokenModId) {
             replace gradleTokenModId, modId
         }
-        if(gradleTokenModName) {
+        if (gradleTokenModName) {
             replace gradleTokenModName, modName
         }
-        if(gradleTokenVersion) {
+        if (gradleTokenVersion) {
             replace gradleTokenVersion, versionDetails().lastTag
         }
-        if(gradleTokenGroupName) {
+        if (gradleTokenGroupName) {
             replace gradleTokenGroupName, modGroup
         }
     }
@@ -211,7 +210,7 @@ minecraft {
         args(arguments)
         jvmArgs(jvmArguments)
 
-        if(developmentEnvironmentUserName) {
+        if (developmentEnvironmentUserName) {
             args("--username", developmentEnvironmentUserName)
         }
     }
@@ -222,7 +221,7 @@ minecraft {
     }
 }
 
-if(file("addon.gradle").exists()) {
+if (file("addon.gradle").exists()) {
     apply from: "addon.gradle"
 }
 
@@ -239,7 +238,7 @@ repositories {
         name = "Overmind forge repo mirror"
         url = "https://gregtech.overminddl1.com/"
     }
-    if(usesMixins.toBoolean()) {
+    if (usesMixins.toBoolean()) {
         maven {
             name = "sponge"
             url = "https://repo.spongepowered.org/repository/maven-public"
@@ -251,7 +250,7 @@ repositories {
 }
 
 dependencies {
-    if(usesMixins.toBoolean()) {
+    if (usesMixins.toBoolean()) {
         annotationProcessor("org.ow2.asm:asm-debug-all:5.0.3")
         annotationProcessor("com.google.guava:guava:24.1.1-jre")
         annotationProcessor("com.google.code.gson:gson:2.8.6")
@@ -276,7 +275,7 @@ def refMap = "${tasks.compileJava.temporaryDir}" + File.separator + mixingConfig
 def mixinSrg = "${tasks.reobf.temporaryDir}" + File.separator + "mixins.srg"
 
 task generateAssets {
-    if(usesMixins.toBoolean()) {
+    if (usesMixins.toBoolean()) {
         getFile("/src/main/resources/mixins." + modId + ".json").text = """{
   "required": true,
   "minVersion": "0.7.11",
@@ -323,20 +322,20 @@ jar {
         attributes(getManifestAttributes())
     }
 
-    if(usesShadowedDependencies.toBoolean()) {
+    if (usesShadowedDependencies.toBoolean()) {
         dependsOn(shadowJar)
         enabled = false
     }
 }
 
 reobf {
-    if(usesMixins.toBoolean()) {
+    if (usesMixins.toBoolean()) {
         addExtraSrgFile mixinSrg
     }
 }
 
 afterEvaluate {
-    if(usesMixins.toBoolean()) {
+    if (usesMixins.toBoolean()) {
         tasks.compileJava {
             options.compilerArgs += [
                     "-AreobfSrgFile=${tasks.reobf.srg}",
@@ -351,7 +350,7 @@ afterEvaluate {
 }
 
 runClient {
-    if(developmentEnvironmentUserName) {
+    if (developmentEnvironmentUserName) {
         arguments += [
                 "--username",
                 developmentEnvironmentUserName
@@ -376,59 +375,59 @@ tasks.withType(JavaExec).configureEach {
 }
 
 processResources
-{
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+        {
+            // this will ensure that this task is redone when the versions change.
+            inputs.property "version", project.version
+            inputs.property "mcversion", project.minecraft.version
 
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
+            // replace stuff in mcmod.info, nothing else
+            from(sourceSets.main.resources.srcDirs) {
+                include 'mcmod.info'
 
-        // replace version and mcversion
-        expand "minecraftVersion": project.minecraft.version,
-                "modVersion": versionDetails().lastTag,
-                "modId": modId,
-                "modName": modName
-    }
+                // replace version and mcversion
+                expand "minecraftVersion": project.minecraft.version,
+                        "modVersion": versionDetails().lastTag,
+                        "modId": modId,
+                        "modName": modName
+            }
 
-    if(usesMixins.toBoolean()) {
-        from refMap
-    }
+            if (usesMixins.toBoolean()) {
+                from refMap
+            }
 
-    // copy everything else, thats not the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
-}
+            // copy everything else, thats not the mcmod.info
+            from(sourceSets.main.resources.srcDirs) {
+                exclude 'mcmod.info'
+            }
+        }
 
 def getManifestAttributes() {
     def manifestAttributes = [:]
-    if(containsMixinsAndOrCoreModOnly.toBoolean() == false && (usesMixins.toBoolean() || coreModClass)) {
+    if (containsMixinsAndOrCoreModOnly.toBoolean() == false && (usesMixins.toBoolean() || coreModClass)) {
         manifestAttributes += ["FMLCorePluginContainsFMLMod": true]
     }
 
-    if(accessTransformersFile) {
-        manifestAttributes += ["FMLAT" : accessTransformersFile.toString()]
+    if (accessTransformersFile) {
+        manifestAttributes += ["FMLAT": accessTransformersFile.toString()]
     }
 
-    if(coreModClass) {
+    if (coreModClass) {
         manifestAttributes += ["FMLCorePlugin": modGroup + "." + coreModClass]
     }
 
-    if(usesMixins.toBoolean()) {
+    if (usesMixins.toBoolean()) {
         manifestAttributes += [
-                "TweakClass" : "org.spongepowered.asm.launch.MixinTweaker",
-                "MixinConfigs" : "mixins." + modId + ".json",
-                "ForceLoadAsMod" : containsMixinsAndOrCoreModOnly.toBoolean() == false
+                "TweakClass"    : "org.spongepowered.asm.launch.MixinTweaker",
+                "MixinConfigs"  : "mixins." + modId + ".json",
+                "ForceLoadAsMod": containsMixinsAndOrCoreModOnly.toBoolean() == false
         ]
     }
     return manifestAttributes
 }
 
 task sourcesJar(type: Jar) {
-    from (sourceSets.main.allJava)
-    from (file("$projectDir/LICENSE"))
+    from(sourceSets.main.allJava)
+    from(file("$projectDir/LICENSE"))
     getArchiveClassifier().set('sources')
 }
 
@@ -475,22 +474,22 @@ task devJar(type: Jar) {
         attributes(getManifestAttributes())
     }
 
-    if(usesShadowedDependencies.toBoolean()) {
+    if (usesShadowedDependencies.toBoolean()) {
         dependsOn(circularResolverJar)
         enabled = false
     }
 }
 
 task apiJar(type: Jar) {
-    from (sourceSets.main.allJava) {
+    from(sourceSets.main.allJava) {
         include modGroup.toString().replaceAll("\\.", "/") + "/" + apiPackage.toString().replaceAll("\\.", "/") + '/**'
     }
 
-    from (sourceSets.main.output) {
+    from(sourceSets.main.output) {
         include modGroup.toString().replaceAll("\\.", "/") + "/" + apiPackage.toString().replaceAll("\\.", "/") + '/**'
     }
 
-    from (sourceSets.main.resources.srcDirs) {
+    from(sourceSets.main.resources.srcDirs) {
         include("LICENSE")
     }
 
@@ -498,11 +497,11 @@ task apiJar(type: Jar) {
 }
 
 artifacts {
-    if(!noPublishedSources) {
+    if (!noPublishedSources) {
         archives sourcesJar
     }
     archives devJar
-    if(apiPackage) {
+    if (apiPackage) {
         archives apiJar
     }
 }
@@ -519,10 +518,10 @@ publishing {
     publications {
         maven(MavenPublication) {
             from components.java
-            if(usesShadowedDependencies.toBoolean()) {
+            if (usesShadowedDependencies.toBoolean()) {
                 artifact source: shadowJar, classifier: ""
             }
-            if(!noPublishedSources) {
+            if (!noPublishedSources) {
                 artifact source: sourcesJar, classifier: "src"
             }
             artifact source: usesShadowedDependencies.toBoolean() ? shadowDevJar : devJar, classifier: "dev"
@@ -534,7 +533,7 @@ publishing {
             artifactId = System.getenv("ARTIFACT_ID") ?: project.name
             // Using the identified version, not project.version as it has the prepended 1.7.10
             version = System.getenv("RELEASE_VERSION") ?: identifiedVersion
-            
+
             // Remove all non GTNH deps here.
             // Original intention was to remove an invalid forgeBin being generated without a groupId (mandatory), but
             // it also removes all of the MC deps
@@ -605,7 +604,7 @@ boolean isNewBuildScriptVersionAvailable(String projectDir) {
 
 static String getVersionHash(String buildScriptContent) {
     String versionLine = buildScriptContent.find("^//version: [a-z0-9]*")
-    if(versionLine != null) {
+    if (versionLine != null) {
         return versionLine.split(": ").last()
     }
     return ""
@@ -625,16 +624,16 @@ def deobf(String sourceURL) {
 
         //get rid of directories:
         int lastSlash = fileName.lastIndexOf("/")
-        if(lastSlash > 0) {
+        if (lastSlash > 0) {
             fileName = fileName.substring(lastSlash + 1)
         }
         //get rid of extension:
-        if(fileName.endsWith(".jar")) {
+        if (fileName.endsWith(".jar")) {
             fileName = fileName.substring(0, fileName.lastIndexOf("."))
         }
 
         String hostName = url.getHost()
-        if(hostName.startsWith("www.")) {
+        if (hostName.startsWith("www.")) {
             hostName = hostName.substring(4)
         }
         List parts = Arrays.asList(hostName.split("\\."))
@@ -642,7 +641,7 @@ def deobf(String sourceURL) {
         hostName = String.join(".", parts)
 
         return deobf(sourceURL, hostName + "/" + fileName)
-    } catch(Exception e) {
+    } catch (Exception e) {
         return deobf(sourceURL, "deobf/" + String.valueOf(sourceURL.hashCode()))
     }
 }
@@ -651,11 +650,11 @@ def deobf(String sourceURL) {
 def deobf(String sourceURL, String fileName) {
     String cacheDir = System.getProperty("user.home") + "/.gradle/caches/"
     String bon2Dir = cacheDir + "forge_gradle/deobf"
-    String bon2File  = bon2Dir + "/BON2-2.5.0.jar"
+    String bon2File = bon2Dir + "/BON2-2.5.0.jar"
     String obfFile = cacheDir + "modules-2/files-2.1/" + fileName + ".jar"
     String deobfFile = cacheDir + "modules-2/files-2.1/" + fileName + "-deobf.jar"
-    
-    if(file(deobfFile).exists()) {
+
+    if (file(deobfFile).exists()) {
         return files(deobfFile)
     }
 
