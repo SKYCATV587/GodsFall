@@ -166,21 +166,24 @@ catch (Exception e) {
 
 // Pulls version first from the VERSION env and then git tag
 String identifiedVersion
+String versionOverride = System.getenv("VERSION") ?: null
 try {
-    String versionOverride = System.getenv("VERSION") ?: null
     identifiedVersion = versionOverride == null ? gitVersion() : versionOverride
 }
 catch (Exception e) {
     logger.error("\n\u001B[1;31mThis mod must be version controlled by Git AND the repository must provide at least one tag,\n" +
                  "or the VERSION override must be set! \u001B[32m(Don't download from GitHub using the ZIP option, instead\n" +
                  "clone the repository, see\u001B[33m https://gtnh.miraheze.org/wiki/Development \u001B[32mfor details.)\u001B[0m\n");
-    identifiedVersion = 'NO-GIT-TAG-SET'
+    versionOverride = 'NO-GIT-TAG-SET'
+    identifiedVersion = versionOverride
 }
 version = minecraftVersion + '-' + identifiedVersion
 String modVersion = version
 
-logger.error('\u001B[31m\u001B[7mWe hope you know what you\'re doing using\u001B[0m\u001B[1;34m ' + modVersion + '\u001B[0m\n');
-logger.error('\7\u001B[31mGoing to blindly try to use\u001B[1;34m ' + modVersion + '\u001B[0m\u001B[31m, this probably won\'t work the way you expect!!\u001B[0m\n');
+if( identifiedVersion.equals(versionOverride) ) {
+    logger.error('\u001B[31m\u001B[7mWe hope you know what you\'re doing using\u001B[0m\u001B[1;34m ' + modVersion + '\u001B[0m\n');
+    logger.error('\7\u001B[31mGoing to blindly try to use\u001B[1;34m ' + modVersion + '\u001B[0m\u001B[31m, this probably won\'t work the way you expect!!\u001B[0m\n');
+}
 
 group = modGroup
 if(project.hasProperty("customArchiveBaseName") && customArchiveBaseName) {
