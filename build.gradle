@@ -157,7 +157,12 @@ configurations.all {
 }
 
 // Fix Jenkins' Git: chmod a file should not be detected as a change and append a '.dirty' to the version
-'git config core.fileMode false'.execute()
+try {
+    'git config core.fileMode false'.execute()
+}
+catch (Exception e) {
+    logger.error("\u001B[31mgit isn't installed at all\u001B[0m")
+}
 
 // Pulls version first from the VERSION env and then git tag
 String identifiedVersion
