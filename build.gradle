@@ -164,15 +164,18 @@ String identifiedVersion
 try {
     String versionOverride = System.getenv("VERSION") ?: null
     identifiedVersion = versionOverride == null ? gitVersion() : versionOverride
-    version = minecraftVersion + "-" + identifiedVersion
 }
 catch (Exception e) {
     logger.error("\n\u001B[1;31mThis mod must be version controlled by Git AND the repository must provide at least one tag,\n" +
                  "or the VERSION override must be set! \u001B[32m(Don't download from GitHub using the ZIP option, instead\n" +
                  "clone the repository, see\u001B[33m https://gtnh.miraheze.org/wiki/Development \u001B[32mfor details.)\u001B[0m\n");
     identifiedVersion = 'NO-GIT-TAG-SET'
-    version = minecraftVersion + '-' + identifiedVersion
 }
+version = minecraftVersion + '-' + identifiedVersion
+String modVersion = version
+
+logger.error('\u001B[31m\u001B[7mWe hope you know what you\'re doing using\u001B[0m\u001B[1;34m ' + modVersion + '\u001B[0m\n');
+logger.error('\7\u001B[31mGoing to blindly try to use\u001B[1;34m ' + modVersion + '\u001B[0m\u001B[31m, this probably won\'t work the way you expect!!\u001B[0m\n');
 
 group = modGroup
 if(project.hasProperty("customArchiveBaseName") && customArchiveBaseName) {
@@ -208,13 +211,7 @@ minecraft {
             replace gradleTokenModName, modName
         }
         if(gradleTokenVersion) {
-            try {
-                replace gradleTokenVersion, versionDetails().lastTag
-            }
-            catch (Exception e) {
-                logger.error('\7\u001B[31mGoing to blindly try to use\u001B[1;34m ' + minecraftVersion + "-" + identifiedVersion + '\u001B[0m\u001B[31m, this probably won\'t work the way you expect!!\n');
-                replace gradleTokenVersion, minecraftVersion + "-" + identifiedVersion
-            }
+            replace gradleTokenVersion, modVersion
         }
         if(gradleTokenGroupName) {
             replace gradleTokenGroupName, modGroup
@@ -400,19 +397,10 @@ processResources
         include 'mcmod.info'
 
         // replace version and mcversion
-        try {
-            expand "minecraftVersion": project.minecraft.version,
-                "modVersion": versionDetails().lastTag,
-                "modId": modId,
-                "modName": modName
-        }
-        catch (Exception e) {
-            logger.error('\u001B[7mWe hope you know what you\'re doing using\u001B[0m\u001B[1;34m ' + version + '\u001B[0m\n');
-            expand "minecraftVersion": project.minecraft.version,
-                "modVersion": version,
-                "modId": modId,
-                "modName": modName
-        }
+        expand "minecraftVersion": project.minecraft.version,
+            "modVersion": modVersion,
+            "modId": modId,
+            "modName": modName
     }
 
     if(usesMixins.toBoolean()) {
